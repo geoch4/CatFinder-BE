@@ -41,6 +41,8 @@ namespace InfrastructureLayer
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
+            services.AddScoped<DbContext>(sp => sp.GetRequiredService<AppDbContext>());
+
             // Bind every repository interface to its concrete EF Core implementation.
             // Scoped = one instance per HTTP request, shared across all handlers in that request.
             services.AddScoped<IAccountRepository, AccountRepository>();

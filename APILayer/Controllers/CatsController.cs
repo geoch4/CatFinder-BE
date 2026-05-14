@@ -4,6 +4,7 @@ using ApplicationLayer.Cat.Commands.UpdateCat;
 using ApplicationLayer.Cat.DTOs;
 using ApplicationLayer.Cat.Queries.GetCatbyId;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APILayer.Controllers
