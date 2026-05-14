@@ -80,6 +80,51 @@ namespace APILayer
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+
+                // Serves Swagger UI. Fetches the generated spec, injects the Bearer security
+                // scheme into it client-side, then hands the modified spec to Swagger UI —
+                // this gives the standard Authorize button and lock icons without needing
+                // Microsoft.OpenApi type imports (which changed incompatibly in v2).
+                app.MapGet("/swagger", () => Results.Content("""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>SEEKAT API</title>
+                        <meta charset="utf-8"/>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+                    </head>
+                    <body>
+                    <div id="swagger-ui"></div>
+                    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+                    <script>
+                        fetch('/openapi/v1.json')
+                            .then(r => r.json())
+                            .then(spec => {
+                                // Inject Bearer JWT security scheme so Swagger shows the Authorize button
+                                spec.components = spec.components || {};
+                                spec.components.securitySchemes = {
+                                    Bearer: {
+                                        type: 'http',
+                                        scheme: 'bearer',
+                                        bearerFormat: 'JWT',
+                                        description: 'Paste the JWT token from POST /api/auth/login'
+                                    }
+                                };
+                                spec.security = [{ Bearer: [] }];
+
+                                SwaggerUIBundle({
+                                    spec: spec,
+                                    dom_id: '#swagger-ui',
+                                    presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
+                                    layout: 'BaseLayout',
+                                    persistAuthorization: true
+                                });
+                            });
+                    </script>
+                    </body>
+                    </html>
+                    """, "text/html"));
             }
 
             app.UseHttpsRedirection();
