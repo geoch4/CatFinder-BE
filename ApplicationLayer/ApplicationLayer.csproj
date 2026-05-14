@@ -9,6 +9,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Auth\" />
+    <Folder Include="Common\Behaviors\" />
+    <Folder Include="Common\Interfaces\" />
+    <Folder Include="Common\Mappings\" />
     <Folder Include="CatReport\Commands\CreateCatReport\" />
     <Folder Include="CatReport\Commands\DeleteCatReport\" />
     <Folder Include="CatReport\Commands\UpdateCatReport\" />
@@ -44,6 +47,10 @@
     <Folder Include="Match\Interfaces\" />
     <Folder Include="Match\Queries\GetAllMatches\" />
     <Folder Include="Match\Queries\GetMatchbyId\" />
+    <Folder Include="AdvertisementImages\DTOs\" />
+    <Folder Include="AdvertisementImages\Interfaces\" />
+    <Folder Include="SavedAdvertisements\DTOs\" />
+    <Folder Include="SavedAdvertisements\Interfaces\" />
     <Folder Include="Users\Commands\CreateUser\" />
     <Folder Include="Users\Commands\DeleteUser\" />
     <Folder Include="Users\Commands\UpdateUser\" />
@@ -55,6 +62,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="16.1.1" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="MediatR" Version="14.1.0" />
   </ItemGroup>
 </Project>
