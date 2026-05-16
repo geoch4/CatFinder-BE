@@ -404,3 +404,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+# Local backend settings
+APILayer/appsettings.Development.json
