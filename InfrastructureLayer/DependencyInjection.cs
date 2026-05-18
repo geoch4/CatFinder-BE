@@ -35,8 +35,8 @@ namespace InfrastructureLayer
             IConfiguration configuration)
         {
             // Register AppDbContext with the SQL Server connection string from appsettings.json
-            var connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = configuration.GetConnectionString("CatFinderDb")
+                ?? throw new InvalidOperationException("Connection string 'CatFinderDb' not found.");
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
