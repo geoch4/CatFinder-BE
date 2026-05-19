@@ -33,5 +33,11 @@ namespace ApplicationLayer.CatReport.Interfaces
         /// Includes the Location navigation so city filtering works in one query.
         /// </summary>
         Task<IEnumerable<Advertisement>> GetFilteredAsync(AdvertisementType? type, string? city);
+
+        /// <summary>
+        /// Returns a single advertisement with Cat and Location navigation properties loaded.
+        /// Used by GET /api/advertisements/{id} to return a fully populated response.
+        /// </summary>
+        Task<Advertisement?> GetByIdWithDetailsAsync(int id);
     }
 }

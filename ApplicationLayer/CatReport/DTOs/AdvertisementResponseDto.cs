@@ -1,3 +1,5 @@
+using ApplicationLayer.Cat.DTOs;
+using ApplicationLayer.Location.DTOs;
 using DomainLayer.Models;
 
 namespace ApplicationLayer.CatReport.DTOs
@@ -17,5 +19,7 @@ namespace ApplicationLayer.CatReport.DTOs
         public AdvertisementStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public CatResponseDto? Cat { get; set; }
+        public LocationResponseDto? Location { get; set; }
     }
 }

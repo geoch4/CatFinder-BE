@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet add *)",
+      "Bash(dotnet build *)",
+      "Bash(Select-String -Pattern \"error|warning|Error|Warning|Build succeeded|FAILED\")",
+      "Bash(netstat -ano)",
+      "Bash(git fetch *)",
+      "Bash(git ls-tree *)",
+      "Bash(git checkout *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(dotnet ef *)",
+      "Bash(dotnet run *)",
+      "Bash(findstr \":5051 :7050 :5000 :7000 :5001\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\GeorgiaM\\\\Desktop\\\\Programmering\\\\SEEKAT2\" -Recurse -Filter \"*Test*\" -Directory)",
+      "Bash(Select-Object FullName)",
+      "Bash(dotnet restore *)",
+      "Bash(dotnet test *)",
+      "PowerShell(netstat *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Stop-Process *)"
+    ]
+  }
+}

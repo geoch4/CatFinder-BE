@@ -39,7 +39,7 @@ namespace InfrastructureLayer.Repositories.Advertisements
         /// </summary>
         public async Task<IEnumerable<Advertisement>> GetFilteredAsync(AdvertisementType? type, string? city)
         {
-            var query = _dbSet.Include(a => a.Location).AsQueryable();
+            var query = _dbSet.Include(a => a.Location).Include(a => a.Cat).AsQueryable();
 
             if (type.HasValue)
                 query = query.Where(a => a.Type == type.Value);
@@ -49,5 +49,15 @@ namespace InfrastructureLayer.Repositories.Advertisements
 
             return await query.ToListAsync();
         }
+
+        /// <summary>
+        /// Returns a single advertisement with Cat and Location eager-loaded.
+        /// Used by the GetById query so the response includes full cat and location data.
+        /// </summary>
+        public async Task<Advertisement?> GetByIdWithDetailsAsync(int id)
+            => await _dbSet
+                .Include(a => a.Cat)
+                .Include(a => a.Location)
+                .FirstOrDefaultAsync(a => a.AdvertisementId == id);
     }
 }

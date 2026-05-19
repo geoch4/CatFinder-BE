@@ -12,9 +12,11 @@ namespace ApplicationLayer.Common.Mappings
             CreateMap<Advertisement, AdvertisementResponseDto>();
 
             // Create request → entity
-            // AccountId is not in the DTO — it is set from the JWT token in the handler
+            // Cat, Location, and AccountId are created/set by the handler — not mapped here
             CreateMap<CreateAdvertisementDto, Advertisement>()
                 .ForMember(dest => dest.AccountId, opt => opt.Ignore())
+                .ForMember(dest => dest.CatId, opt => opt.Ignore())
+                .ForMember(dest => dest.LocationId, opt => opt.Ignore())
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(_ => AdvertisementStatus.Active));
 
             // Update request → entity (only map fields that were actually sent)

@@ -35,6 +35,7 @@ namespace APILayer.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(int advertisementId, [FromBody] CreateCommentDto dto)
         {
+            dto.AdvertisementId = advertisementId;
             var result = await _mediator.Send(new CreateCommentCommand(dto));
             if (!result.IsSuccess) return BadRequest(result);
             return StatusCode(StatusCodes.Status201Created, result);

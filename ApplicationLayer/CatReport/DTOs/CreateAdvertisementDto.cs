@@ -5,12 +5,26 @@ namespace ApplicationLayer.CatReport.DTOs
 {
     public class CreateAdvertisementDto
     {
-        [Required]
-        public int CatId { get; set; }
+        // Cat fields — a new cat is created together with the advertisement
+        [MaxLength(100)]
+        public string? CatName { get; set; }
+
+        [MaxLength(100)]
+        public string? Breed { get; set; }
 
         [Required]
-        public int LocationId { get; set; }
+        [MaxLength(100)]
+        public string FurColor { get; set; } = string.Empty;
 
+        // Location fields — a new location is created together with the advertisement
+        [Required]
+        [MaxLength(100)]
+        public string City { get; set; } = string.Empty;
+
+        [MaxLength(100)]
+        public string? Area { get; set; }
+
+        // Advertisement fields
         [Required]
         [MaxLength(200)]
         public string Title { get; set; } = string.Empty;

@@ -17,9 +17,11 @@ namespace InfrastructureLayer.Database
             // This connection string is only used when running EF Core CLI commands locally.
             // The real connection string is provided via appsettings.json at runtime.
             optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\mssqllocaldb;Database=CatFinderDb;Trusted_Connection=True;");
+                "Server=Georgia\\SQLEXPRESS;Database=CatFinderDb;Trusted_Connection=True;TrustServerCertificate=True;");
 
             return new AppDbContext(optionsBuilder.Options);
         }
     }
 }
+
+

@@ -21,7 +21,7 @@ namespace ApplicationLayer.CatReport.Queries.GetCatReportbyId
         public async Task<OperationResult<AdvertisementResponseDto>> Handle(
             GetAdvertisementByIdQuery request, CancellationToken cancellationToken)
         {
-            var ad = await _repo.GetByIdAsync(request.Id);
+            var ad = await _repo.GetByIdWithDetailsAsync(request.Id);
             if (ad is null)
                 return OperationResult<AdvertisementResponseDto>.Failure("Advertisement not found.");
 
