@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Auth\" />
+    <Folder Include="Common\Behaviors\" />
+    <Folder Include="Common\Interfaces\" />
+    <Folder Include="Common\Mappings\" />
+    <Folder Include="CatReport\Commands\CreateCatReport\" />
+    <Folder Include="CatReport\Commands\DeleteCatReport\" />
+    <Folder Include="CatReport\Commands\UpdateCatReport\" />
+    <Folder Include="CatReport\DTOs\" />
+    <Folder Include="CatReport\Interfaces\" />
+    <Folder Include="CatReport\Queries\GetAllCatReports\" />
+    <Folder Include="CatReport\Queries\GetCatReportbyId\" />
+    <Folder Include="Cat\Commands\CreateCat\" />
+    <Folder Include="Cat\Commands\DeleteCat\" />
+    <Folder Include="Cat\Commands\UpdateCat\" />
+    <Folder Include="Cat\DTOs\" />
+    <Folder Include="Cat\Interfaces\" />
+    <Folder Include="Cat\Queries\GetAllCats\" />
+    <Folder Include="Cat\Queries\GetCatbyId\" />
+    <Folder Include="Comments\Commands\CreateComment\" />
+    <Folder Include="Comments\Commands\DeleteComment\" />
+    <Folder Include="Comments\Commands\UpdateComment\" />
+    <Folder Include="Comments\DTOs\" />
+    <Folder Include="Comments\Interfaces\" />
+    <Folder Include="Comments\Queries\GetAllComments\" />
+    <Folder Include="Comments\Queries\GetCommentbyId\" />
+    <Folder Include="Location\Commands\CreateLocation\" />
+    <Folder Include="Location\Commands\DeleteLocation\" />
+    <Folder Include="Location\Commands\UpdateLocation\" />
+    <Folder Include="Location\DTOs\" />
+    <Folder Include="Location\Interfaces\" />
+    <Folder Include="Location\Queries\GetAllLocations\" />
+    <Folder Include="Location\Queries\GetLocationbyId\" />
+    <Folder Include="Match\Commands\CreateMatch\" />
+    <Folder Include="Match\Commands\DeleteMatch\" />
+    <Folder Include="Match\Commands\UpdateMatch\" />
+    <Folder Include="Match\DTOs\" />
+    <Folder Include="Match\Interfaces\" />
+    <Folder Include="Match\Queries\GetAllMatches\" />
+    <Folder Include="Match\Queries\GetMatchbyId\" />
+    <Folder Include="AdvertisementImages\DTOs\" />
+    <Folder Include="AdvertisementImages\Interfaces\" />
+    <Folder Include="SavedAdvertisements\DTOs\" />
+    <Folder Include="SavedAdvertisements\Interfaces\" />
+    <Folder Include="Users\Commands\CreateUser\" />
+    <Folder Include="Users\Commands\DeleteUser\" />
+    <Folder Include="Users\Commands\UpdateUser\" />
+    <Folder Include="Users\DTOs\" />
+    <Folder Include="Users\Interfaces\" />
+    <Folder Include="Users\Queries\GetAllUsers\" />
+    <Folder Include="Users\Queries\GetUserbyId\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
+  </ItemGroup>
+</Project>

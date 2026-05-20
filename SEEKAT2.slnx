@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="APILayer/APILayer.csproj" />
+  <Project Path="ApplicationLayer/ApplicationLayer.csproj" />
+  <Project Path="DomainLayer/DomainLayer.csproj" />
+  <Project Path="InfrastructureLayer/InfrastructureLayer.csproj" />
+  <Project Path="TestLayer/TestLayer.csproj" Id="b0b5a4d4-1f64-4dc3-8ea5-05d052377eeb" />
+</Solution>
