@@ -1,10 +1,15 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using APILayer.Helpers;
 using APILayer.Middleware;
 using ApplicationLayer;
 using ApplicationLayer.Auth;
 using InfrastructureLayer;
+using InfrastructureLayer.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 
 namespace APILayer
@@ -51,6 +56,37 @@ namespace APILayer
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddOpenApi();
+
+            // ── Rate Limiting ──────────────────────────────────────────────────────
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+                // Global per-IP fixed-window limiter — applies to every request
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = builder.Configuration.GetValue("RateLimiting:Global:PermitLimit", 100),
+                            Window = TimeSpan.FromSeconds(builder.Configuration.GetValue("RateLimiting:Global:WindowSeconds", 60)),
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 0
+                        }));
+
+                // Stricter per-IP policy for login / register / reset-password
+                options.AddFixedWindowLimiter("auth", limiterOptions =>
+                {
+                    limiterOptions.PermitLimit = builder.Configuration.GetValue("RateLimiting:Auth:PermitLimit", 10);
+                    limiterOptions.Window = TimeSpan.FromSeconds(builder.Configuration.GetValue("RateLimiting:Auth:WindowSeconds", 60));
+                    limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                    limiterOptions.QueueLimit = 0;
+                });
+            });
+
+            // ── Health Checks ──────────────────────────────────────────────────────
+            builder.Services.AddHealthChecks()
+                .AddDbContextCheck<AppDbContext>("database");
 
             // ── CORS ───────────────────────────────────────────────────────────────
             // AllowCredentials() is required for the HttpOnly refresh token cookie to work
@@ -127,6 +163,8 @@ namespace APILayer
                     """, "text/html"));
             }
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             // Must be before UseAuthentication and UseAuthorization
@@ -135,7 +173,28 @@ namespace APILayer
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseRateLimiter();
+
             app.MapControllers();
+
+            app.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = async (context, report) =>
+                {
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        status = report.Status.ToString(),
+                        checks = report.Entries.Select(e => new
+                        {
+                            name = e.Key,
+                            status = e.Value.Status.ToString(),
+                            description = e.Value.Description,
+                            durationMs = e.Value.Duration.TotalMilliseconds
+                        })
+                    });
+                }
+            }).DisableRateLimiting();
 
             app.Run();
         }

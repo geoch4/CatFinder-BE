@@ -1,4 +1,9 @@
+using ApplicationLayer.AdvertisementImages.Commands.CreateAdvertisementImage;
+using ApplicationLayer.AdvertisementImages.Commands.DeleteAdvertisementImage;
 using ApplicationLayer.AdvertisementImages.DTOs;
+using ApplicationLayer.AdvertisementImages.Queries.GetByAdvertisement;
+using ApplicationLayer.AdvertisementImages.Queries.GetById;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APILayer.Controllers
@@ -7,27 +12,67 @@ namespace APILayer.Controllers
     [Route("api/[controller]")]
     public class AdvertisementImagesController : ControllerBase
     {
+        private readonly ISender _mediator;
+
+        public AdvertisementImagesController(ISender mediator) => _mediator = mediator;
+
         [HttpGet("advertisement/{advertisementId:int}")]
         [ProducesResponseType(typeof(IEnumerable<AdvertisementImageResponseDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<AdvertisementImageResponseDto>>> GetByAdvertisement(int advertisementId)
+        public async Task<IActionResult> GetByAdvertisement(int advertisementId)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new GetAdvertisementImagesByAdvertisementQuery(advertisementId));
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(AdvertisementImageResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<AdvertisementImageResponseDto>> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new GetAdvertisementImageByIdQuery(id));
+            if (!result.IsSuccess) return NotFound(result);
+            return Ok(result);
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(AdvertisementImageResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AdvertisementImageResponseDto>> Create([FromBody] CreateAdvertisementImageDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateAdvertisementImageDto dto)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new CreateAdvertisementImageCommand(dto));
+            if (!result.IsSuccess) return BadRequest(result);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.AdvertisementImageId }, result);
+        }
+
+        [HttpPost("upload")]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(typeof(AdvertisementImageResponseDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Upload(IFormFile file, [FromForm] int advertisementId, [FromForm] bool isPrimary = false)
+        {
+            string[] allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
+            if (!allowed.Contains(file.ContentType))
+                return BadRequest("Filformat stöds ej.");
+
+            var ext = Path.GetExtension(file.FileName);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            Directory.CreateDirectory(uploadsDir);
+
+            await using var stream = System.IO.File.Create(Path.Combine(uploadsDir, fileName));
+            await file.CopyToAsync(stream);
+
+            var imageUrl = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
+            var dto = new CreateAdvertisementImageDto
+            {
+                AdvertisementId = advertisementId,
+                ImageUrl = imageUrl,
+                IsPrimary = isPrimary,
+            };
+
+            var result = await _mediator.Send(new CreateAdvertisementImageCommand(dto));
+            if (!result.IsSuccess) return BadRequest(result);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.AdvertisementImageId }, result);
         }
 
         [HttpDelete("{id:int}")]
@@ -35,7 +80,9 @@ namespace APILayer.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new DeleteAdvertisementImageCommand(id));
+            if (!result.IsSuccess) return NotFound(result);
+            return NoContent();
         }
     }
 }
