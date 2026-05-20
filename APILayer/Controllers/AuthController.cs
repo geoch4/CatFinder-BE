@@ -8,6 +8,7 @@ using ApplicationLayer.Common.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace APILayer.Controllers
 {
@@ -28,6 +29,7 @@ namespace APILayer.Controllers
 
         // POST /api/auth/register
         // Creates a new account and returns a JWT + refresh token.
+        [EnableRateLimiting("auth")]
         [HttpPost("register")]
         [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -40,6 +42,7 @@ namespace APILayer.Controllers
 
         // POST /api/auth/login
         // Authenticates with username or email + password, returns JWT + refresh token.
+        [EnableRateLimiting("auth")]
         [HttpPost("login")]
         [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -52,6 +55,7 @@ namespace APILayer.Controllers
 
         // POST /api/auth/refresh-token
         // Issues a new JWT using a valid, unexpired refresh token. Rotates the refresh token.
+        [EnableRateLimiting("auth")]
         [HttpPost("refresh-token")]
         [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -81,6 +85,7 @@ namespace APILayer.Controllers
 
         // POST /api/auth/reset-password
         // Replaces the account's password. Looks up the account by email.
+        [EnableRateLimiting("auth")]
         [HttpPost("reset-password")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
