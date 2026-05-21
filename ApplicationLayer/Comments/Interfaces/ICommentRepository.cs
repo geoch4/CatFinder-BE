@@ -14,5 +14,6 @@ namespace ApplicationLayer.Comments.Interfaces
         /// Maps to GET /api/advertisements/{id}/comments.
         /// </summary>
         Task<IEnumerable<Comment>> GetByAdvertisementIdAsync(int advertisementId);
+        Task<Comment?> GetByIdWithAccountAsync(int commentId);
     }
 }

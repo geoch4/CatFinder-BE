@@ -1,4 +1,9 @@
+using ApplicationLayer.CatReport.Commands.CreateCatReport;
+using ApplicationLayer.CatReport.Queries.GetAllCatReports;
+using ApplicationLayer.SavedAdvertisements.Commands;
 using ApplicationLayer.SavedAdvertisements.DTOs;
+using ApplicationLayer.SavedAdvertisements.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APILayer.Controllers
@@ -7,11 +12,19 @@ namespace APILayer.Controllers
     [Route("api/[controller]")]
     public class SavedAdvertisementsController : ControllerBase
     {
+        private readonly ISender _mediator;
+
+        public SavedAdvertisementsController(ISender mediator)
+        {
+            _mediator = mediator;
+        }
+
         [HttpGet("account/{accountId:int}")]
         [ProducesResponseType(typeof(IEnumerable<SavedAdvertisementResponseDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SavedAdvertisementResponseDto>>> GetByAccount(int accountId)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new GetSavedAdvertisementByAccoundIdQuery(accountId));
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")]
@@ -19,7 +32,14 @@ namespace APILayer.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<SavedAdvertisementResponseDto>> GetById(int id)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new GetSavedAdvertisementByIdQuery(id));
+
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -27,7 +47,13 @@ namespace APILayer.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SavedAdvertisementResponseDto>> Create([FromBody] CreateSavedAdvertisementDto dto)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new CreateSavedAdvertisementCommand(dto));
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = result.SavedAdvertisementId },
+                result
+            );
         }
 
         [HttpDelete("{id:int}")]
@@ -35,7 +61,11 @@ namespace APILayer.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            throw new NotImplementedException();
+            await _mediator.Send(
+                new DeleteSavedAdvertisementCommand(id)
+                );
+
+            return NoContent();
         }
     }
 }

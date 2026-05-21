@@ -17,6 +17,15 @@ namespace InfrastructureLayer.Repositories.SavedAdvertisements
         /// Used to display the user's saved listings page.
         /// </summary>
         public async Task<IEnumerable<SavedAdvertisement>> GetByAccountIdAsync(int accountId)
-            => await _dbSet.Where(s => s.AccountId == accountId).ToListAsync();
+        {
+            return await _dbSet
+                .Include(x => x.Advertisement)
+                    .ThenInclude(a => a.Cat)
+                .Include(x => x.Advertisement)
+                    .ThenInclude(a => a.Location)
+                .Where(x => x.AccountId == accountId)
+                .ToListAsync();
+        }
+        
     }
 }

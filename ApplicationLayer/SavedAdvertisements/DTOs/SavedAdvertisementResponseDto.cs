@@ -1,3 +1,5 @@
+using ApplicationLayer.CatReport.DTOs;
+
 namespace ApplicationLayer.SavedAdvertisements.DTOs
 {
     public class SavedAdvertisementResponseDto
@@ -6,5 +8,6 @@ namespace ApplicationLayer.SavedAdvertisements.DTOs
         public int AccountId { get; set; }
         public int AdvertisementId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public AdvertisementResponseDto? Advertisement { get; set; }
     }
 }

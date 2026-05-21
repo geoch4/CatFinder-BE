@@ -1,6 +1,7 @@
 using ApplicationLayer.Comments.Interfaces;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace InfrastructureLayer.Repositories.Comments
 {
@@ -17,6 +18,19 @@ namespace InfrastructureLayer.Repositories.Comments
         /// Maps to GET /api/advertisements/{id}/comments.
         /// </summary>
         public async Task<IEnumerable<Comment>> GetByAdvertisementIdAsync(int advertisementId)
-            => await _dbSet.Where(c => c.AdvertisementId == advertisementId).ToListAsync();
+        {
+            return await _dbSet
+                .Include(c => c.Account)
+                .Where(c => c.AdvertisementId == advertisementId)
+                .ToListAsync();
+        }
+
+        public async Task<Comment?> GetByIdWithAccountAsync(int commentId)
+        {
+            return await _dbSet
+                .Include(c => c.Account)
+                .FirstOrDefaultAsync(c => c.CommentId == commentId);
+        }
+
     }
 }
