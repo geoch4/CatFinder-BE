@@ -15,6 +15,10 @@ namespace ApplicationLayer.Common.Mappings
             // AccountId is not in the DTO — it is set from the JWT token in the handler
             CreateMap<CreateSavedAdvertisementDto, SavedAdvertisement>()
                 .ForMember(dest => dest.AccountId, opt => opt.Ignore());
+
+            CreateMap<SavedAdvertisement, SavedAdvertisementResponseDto>()
+                .ForMember(dest => dest.Advertisement,
+                    opt => opt.MapFrom(src => src.Advertisement));
         }
     }
 }

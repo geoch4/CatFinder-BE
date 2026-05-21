@@ -16,6 +16,11 @@ namespace ApplicationLayer.Common.Mappings
             CreateMap<CreateCommentDto, Comment>()
                 .ForMember(dest => dest.AccountId, opt => opt.Ignore());
 
+            // include username when creating a comment
+            CreateMap<Comment, CommentResponseDto>()
+                .ForMember(dest => dest.Username,
+                    opt => opt.MapFrom(src => src.Account.Username));
+
             // Update request → entity (body is required so no null-skip needed)
             CreateMap<UpdateCommentDto, Comment>();
         }

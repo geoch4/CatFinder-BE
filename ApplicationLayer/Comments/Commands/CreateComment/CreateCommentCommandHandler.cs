@@ -26,13 +26,25 @@ namespace ApplicationLayer.Comments.Commands.CreateComment
         {
             var accountId = _userContext.AccountId;
             if (accountId is null)
+            {
                 return OperationResult<CommentResponseDto>.Failure("User not authenticated.");
+            }
 
             var comment = _mapper.Map<Comment>(request.Dto);
             comment.AccountId = accountId.Value;
 
             await _repo.AddAsync(comment);
-            return OperationResult<CommentResponseDto>.Success(_mapper.Map<CommentResponseDto>(comment));
+
+            var createdComment = await _repo.GetByIdWithAccountAsync(comment.CommentId);
+
+            if (createdComment is null)
+            {
+                return OperationResult<CommentResponseDto>.Failure("Comment could not be created.");
+            }
+
+            return OperationResult<CommentResponseDto>.Success(
+                _mapper.Map<CommentResponseDto>(createdComment)
+            );
         }
     }
 }
