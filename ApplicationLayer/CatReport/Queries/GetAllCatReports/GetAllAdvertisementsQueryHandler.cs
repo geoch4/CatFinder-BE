@@ -21,7 +21,7 @@ namespace ApplicationLayer.CatReport.Queries.GetAllCatReports
         public async Task<OperationResult<List<AdvertisementResponseDto>>> Handle(
             GetAllAdvertisementsQuery request, CancellationToken cancellationToken)
         {
-            var ads = await _repo.GetFilteredAsync(request.Type, request.City);
+            var ads = await _repo.GetFilteredAsync(request.Type, request.City, request.Skip, request.Take);
             return OperationResult<List<AdvertisementResponseDto>>.Success(
                 _mapper.Map<List<AdvertisementResponseDto>>(ads));
         }

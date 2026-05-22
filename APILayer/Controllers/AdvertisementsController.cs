@@ -29,9 +29,11 @@ namespace APILayer.Controllers
         [ProducesResponseType(typeof(IEnumerable<AdvertisementResponseDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(
             [FromQuery] AdvertisementType? type,
-            [FromQuery] string? city)
+            [FromQuery] string? city,
+            [FromQuery] int skip = 0,
+            [FromQuery] int take = 12)
         {
-            var result = await _mediator.Send(new GetAllAdvertisementsQuery(type, city));
+            var result = await _mediator.Send(new GetAllAdvertisementsQuery(type, city, skip, take));
             return Ok(result);
         }
 
