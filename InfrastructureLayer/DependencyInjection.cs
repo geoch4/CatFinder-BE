@@ -6,6 +6,7 @@ using ApplicationLayer.CatReport.Interfaces;
 using ApplicationLayer.Comments.Interfaces;
 using ApplicationLayer.Common.Interfaces;
 using ApplicationLayer.Location.Interfaces;
+using ApplicationLayer.Reports.Interfaces;
 using ApplicationLayer.SavedAdvertisements.Interfaces;
 using ApplicationLayer.Users.Interfaces;
 using InfrastructureLayer.Database;
@@ -15,6 +16,7 @@ using InfrastructureLayer.Repositories.AdvertisementImages;
 using InfrastructureLayer.Repositories.Cats;
 using InfrastructureLayer.Repositories.Comments;
 using InfrastructureLayer.Repositories.Locations;
+using InfrastructureLayer.Repositories.Reports;
 using InfrastructureLayer.Repositories.SavedAdvertisements;
 using InfrastructureLayer.Services;
 using Microsoft.AspNetCore.Http;
@@ -52,6 +54,7 @@ namespace InfrastructureLayer
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IAdvertisementImageRepository, AdvertisementImageRepository>();
             services.AddScoped<ISavedAdvertisementRepository, SavedAdvertisementRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
 
             // Auth and HTTP context services
             services.AddHttpContextAccessor();

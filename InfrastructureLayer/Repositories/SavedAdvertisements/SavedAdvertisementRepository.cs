@@ -23,7 +23,7 @@ namespace InfrastructureLayer.Repositories.SavedAdvertisements
                     .ThenInclude(a => a.Cat)
                 .Include(x => x.Advertisement)
                     .ThenInclude(a => a.Location)
-                .Where(x => x.AccountId == accountId)
+                .Where(x => x.AccountId == accountId && x.Advertisement.IsVisible)
                 .ToListAsync();
         }
         

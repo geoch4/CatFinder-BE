@@ -1,5 +1,6 @@
 using ApplicationLayer.Cat.DTOs;
 using ApplicationLayer.Location.DTOs;
+using ApplicationLayer.Reports.DTOs;
 using DomainLayer.Models;
 
 namespace ApplicationLayer.CatReport.DTOs
@@ -19,7 +20,9 @@ namespace ApplicationLayer.CatReport.DTOs
         public DateTime LastSeenAt { get; set; }
         public AdvertisementType Type { get; set; }
         public AdvertisementStatus Status { get; set; }
+        public bool IsVisible { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public List<ReportResponseDto> Reports { get; set; } = new();
     }
 }

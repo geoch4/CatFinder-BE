@@ -34,6 +34,8 @@ namespace DomainLayer.Models
 
         public AdvertisementStatus Status { get; set; }
 
+        public bool IsVisible { get; set; } = true;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
@@ -44,5 +46,6 @@ namespace DomainLayer.Models
         public virtual ICollection<AdvertisementImage> AdvertisementImages { get; set; } = new List<AdvertisementImage>();
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public virtual ICollection<SavedAdvertisement> SavedAdvertisements { get; set; } = new List<SavedAdvertisement>();
+        public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
     }
 }

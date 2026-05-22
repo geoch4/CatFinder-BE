@@ -6,6 +6,7 @@ using ApplicationLayer.CatReport.Queries.GetAllCatReports;
 using ApplicationLayer.CatReport.Queries.GetCatReportbyId;
 using DomainLayer.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APILayer.Controllers
@@ -84,6 +85,33 @@ namespace APILayer.Controllers
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] AdvertisementStatus status)
         {
             var result = await _mediator.Send(new UpdateAdvertisementStatusCommand(id, status));
+            if (!result.IsSuccess) return result.Errors.Contains("Advertisement not found.")
+                ? NotFound(result) : BadRequest(result);
+            return Ok(result);
+        }
+
+        // GET /api/advertisements/admin
+        // Admin-only: returns all advertisements regardless of visibility.
+        [HttpGet("admin")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(IEnumerable<AdvertisementResponseDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllAdmin(
+            [FromQuery] AdvertisementType? type,
+            [FromQuery] string? city)
+        {
+            var result = await _mediator.Send(new GetAllAdvertisementsAdminQuery(type, city));
+            return Ok(result);
+        }
+
+        // PUT /api/advertisements/{id}/visibility
+        // Admin-only: sets whether an advertisement is visible to regular users.
+        [HttpPut("{id:int}/visibility")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(AdvertisementResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateVisibility(int id, [FromBody] bool isVisible)
+        {
+            var result = await _mediator.Send(new UpdateAdvertisementVisibilityCommand(id, isVisible));
             if (!result.IsSuccess) return result.Errors.Contains("Advertisement not found.")
                 ? NotFound(result) : BadRequest(result);
             return Ok(result);

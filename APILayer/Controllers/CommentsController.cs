@@ -3,6 +3,7 @@ using ApplicationLayer.Comments.Commands.DeleteComment;
 using ApplicationLayer.Comments.DTOs;
 using ApplicationLayer.Comments.Queries.GetAllComments;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APILayer.Controllers
@@ -43,6 +44,7 @@ namespace APILayer.Controllers
         // DELETE /api/comments/{id}
         // Removes a comment by its id. Only the comment author or an admin should be allowed.
         [HttpDelete("{id:int}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)

@@ -4,6 +4,7 @@ using InfrastructureLayer.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfrastructureLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260522110849_AddIsVisibleToAdvertisement")]
+    partial class AddIsVisibleToAdvertisement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,9 +104,7 @@ namespace InfrastructureLayer.Migrations
                         .HasColumnType("nvarchar(2000)");
 
                     b.Property<bool>("IsVisible")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("LastSeenAt")
                         .HasColumnType("datetime2");
@@ -285,42 +286,6 @@ namespace InfrastructureLayer.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.Report", b =>
-                {
-                    b.Property<int>("ReportId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AdvertisementId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int?>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ReportId");
-
-                    b.HasIndex("AdvertisementId");
-
-                    b.HasIndex("AccountId", "AdvertisementId", "CommentId")
-                        .IsUnique()
-                        .HasFilter("[CommentId] IS NOT NULL");
-
-                    b.ToTable("Reports");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.SavedAdvertisement", b =>
                 {
                     b.Property<int>("SavedAdvertisementId")
@@ -421,25 +386,6 @@ namespace InfrastructureLayer.Migrations
                     b.Navigation("Advertisement");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.Report", b =>
-                {
-                    b.HasOne("DomainLayer.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DomainLayer.Models.Advertisement", "Advertisement")
-                        .WithMany("Reports")
-                        .HasForeignKey("AdvertisementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Advertisement");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.SavedAdvertisement", b =>
                 {
                     b.HasOne("DomainLayer.Models.Account", "Account")
@@ -475,8 +421,6 @@ namespace InfrastructureLayer.Migrations
                     b.Navigation("AdvertisementImages");
 
                     b.Navigation("Comments");
-
-                    b.Navigation("Reports");
 
                     b.Navigation("SavedAdvertisements");
                 });

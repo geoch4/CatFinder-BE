@@ -42,6 +42,24 @@ namespace InfrastructureLayer.Repositories.Advertisements
             var query = _dbSet
                 .Include(a => a.Cat)
                 .Include(a => a.Location)
+                .Where(a => a.IsVisible)
+                .AsQueryable();
+
+            if (type.HasValue)
+                query = query.Where(a => a.Type == type.Value);
+
+            if (!string.IsNullOrEmpty(city))
+                query = query.Where(a => a.Location.City == city);
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Advertisement>> GetAllForAdminAsync(AdvertisementType? type, string? city)
+        {
+            var query = _dbSet
+                .Include(a => a.Cat)
+                .Include(a => a.Location)
+                .Include(a => a.Reports)
                 .AsQueryable();
 
             if (type.HasValue)
