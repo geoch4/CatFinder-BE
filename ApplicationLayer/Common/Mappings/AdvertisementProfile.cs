@@ -11,7 +11,8 @@ namespace ApplicationLayer.Common.Mappings
             // Advertisement -> Response DTO
             CreateMap<Advertisement, AdvertisementResponseDto>()
                 .ForMember(dest => dest.Cat, opt => opt.MapFrom(src => src.Cat))
-                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
+                .ForMember(dest => dest.Reports, opt => opt.MapFrom(src => src.Reports));
 
             // Create DTO -> Entity
             CreateMap<CreateAdvertisementDto, Advertisement>()

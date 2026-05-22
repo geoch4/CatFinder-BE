@@ -19,6 +19,7 @@ namespace InfrastructureLayer.Database
         public DbSet<Comment> Comments => Set<Comment>();
         public DbSet<Location> Locations => Set<Location>();
         public DbSet<SavedAdvertisement> SavedAdvertisements => Set<SavedAdvertisement>();
+        public DbSet<Report> Reports => Set<Report>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +47,10 @@ namespace InfrastructureLayer.Database
                 .WithMany(a => a.Advertisements)
                 .HasForeignKey(a => a.AccountId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Advertisement>()
+                .Property(a => a.IsVisible)
+                .HasDefaultValue(true);
 
             // ── Advertisement → Cat ────────────────────────────────────────────────
             // Restrict prevents SQL Server from raising a multiple-cascade-paths error.
@@ -118,6 +123,35 @@ namespace InfrastructureLayer.Database
             // An account can only bookmark the same advertisement once.
             modelBuilder.Entity<SavedAdvertisement>()
                 .HasIndex(s => new { s.AccountId, s.AdvertisementId })
+                .IsUnique();
+
+            // ── Report → Advertisement ─────────────────────────────────────────────
+            // Deleting an advertisement removes its reports.
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.Advertisement)
+                .WithMany(a => a.Reports)
+                .HasForeignKey(r => r.AdvertisementId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ── Report → Account ───────────────────────────────────────────────────
+            // Restrict to avoid second cascade path via Account → Advertisement → Report.
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.Account)
+                .WithMany()
+                .HasForeignKey(r => r.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // CommentId is a plain nullable int — no FK constraint is configured because
+            // both Advertisement → Report (CASCADE) and Advertisement → Comment → Report
+            // would create multiple cascade paths, which SQL Server rejects.
+            // Reports are audit records; a stale CommentId after comment deletion is fine.
+            modelBuilder.Entity<Report>()
+                .Property(r => r.CommentId)
+                .IsRequired(false);
+
+            // One report per user per advertisement-or-comment combination.
+            modelBuilder.Entity<Report>()
+                .HasIndex(r => new { r.AccountId, r.AdvertisementId, r.CommentId })
                 .IsUnique();
 
             // ── Location coordinate precision ──────────────────────────────────────

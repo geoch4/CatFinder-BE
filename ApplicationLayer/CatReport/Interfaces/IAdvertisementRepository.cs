@@ -30,8 +30,14 @@ namespace ApplicationLayer.CatReport.Interfaces
 
         /// <summary>
         /// Combined filter for GET /api/advertisements?type=Lost&amp;city=Göteborg.
-        /// Includes the Location navigation so city filtering works in one query.
+        /// Only returns visible advertisements (IsVisible = true).
         /// </summary>
         Task<IEnumerable<Advertisement>> GetFilteredAsync(AdvertisementType? type, string? city);
+
+        /// <summary>
+        /// Admin-only query returning all advertisements regardless of visibility.
+        /// Supports the same optional type/city filters as GetFilteredAsync.
+        /// </summary>
+        Task<IEnumerable<Advertisement>> GetAllForAdminAsync(AdvertisementType? type, string? city);
     }
 }
