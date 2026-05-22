@@ -10,7 +10,20 @@
       "Bash(Sort-Object)",
       "Bash(npm run *)",
       "Bash(dotnet build *)",
-      "Bash(dotnet ef *)"
+      "Bash(dotnet ef *)",
+      "Bash(xargs grep -l \"ImageUrl\\\\|imageUrl\\\\|uploads\\\\|wwwroot\")",
+      "Bash(xargs grep -l \"ImageUrl.*=\\\\|imageUrl\\\\|wwwroot\\\\|uploads\")",
+      "Skill(claude-api)",
+      "Bash(dotnet add *)",
+      "Bash(Get-ChildItem -Recurse \"C:\\\\Users\\\\mario\\\\.nuget\\\\packages\\\\anthropic\\\\12.23.0\\\\lib\" -Filter \"*.dll\")",
+      "Bash(Select-Object -First 5 FullName)",
+      "Bash(cd /tmp)",
+      "Bash(cp \"C:/Users/mario/.nuget/packages/anthropic/12.23.0/anthropic.12.23.0.nupkg\" anthropic.zip)",
+      "Bash(unzip -l anthropic.zip)",
+      "Bash(unzip -o anthropic.zip \"*.cs\" -d anthropic_src)",
+      "Bash(dotnet script *)",
+      "Bash(dotnet-script /tmp/probe.csx)",
+      "Bash(dotnet remove *)"
     ]
   }
 }

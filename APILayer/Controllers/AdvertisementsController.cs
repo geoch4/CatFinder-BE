@@ -4,6 +4,7 @@ using ApplicationLayer.CatReport.Commands.UpdateCatReport;
 using ApplicationLayer.CatReport.DTOs;
 using ApplicationLayer.CatReport.Queries.GetAllCatReports;
 using ApplicationLayer.CatReport.Queries.GetCatReportbyId;
+using ApplicationLayer.CatReport.Queries.GetMyAdvertisements;
 using DomainLayer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -89,6 +90,18 @@ namespace APILayer.Controllers
             var result = await _mediator.Send(new UpdateAdvertisementStatusCommand(id, status));
             if (!result.IsSuccess) return result.Errors.Contains("Advertisement not found.")
                 ? NotFound(result) : BadRequest(result);
+            return Ok(result);
+        }
+
+        // GET /api/advertisements/my
+        // Returns all advertisements created by the currently authenticated user,
+        // including hidden ones (so owners can see if their ad was moderated).
+        [HttpGet("my")]
+        [Authorize]
+        [ProducesResponseType(typeof(IEnumerable<AdvertisementResponseDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMine()
+        {
+            var result = await _mediator.Send(new GetMyAdvertisementsQuery());
             return Ok(result);
         }
 

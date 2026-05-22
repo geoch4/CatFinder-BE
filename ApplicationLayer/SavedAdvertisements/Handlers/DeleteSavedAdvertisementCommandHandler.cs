@@ -1,32 +1,33 @@
-﻿using ApplicationLayer.Comments.Commands.DeleteComment;
+﻿using ApplicationLayer.Common.Interfaces;
 using ApplicationLayer.SavedAdvertisements.Commands;
 using ApplicationLayer.SavedAdvertisements.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ApplicationLayer.SavedAdvertisements.Handlers
 {
     public class DeleteSavedAdvertisementCommandHandler : IRequestHandler<DeleteSavedAdvertisementCommand>
     {
-        private readonly ISavedAdvertisementRepository _savedAdvertisementRepository;
+        private readonly ISavedAdvertisementRepository _repo;
+        private readonly IUserContextService _userContext;
 
-        public DeleteSavedAdvertisementCommandHandler(ISavedAdvertisementRepository savedAdvertisementrepository)
+        public DeleteSavedAdvertisementCommandHandler(
+            ISavedAdvertisementRepository repo,
+            IUserContextService userContext)
         {
-            _savedAdvertisementRepository = savedAdvertisementrepository;
+            _repo = repo;
+            _userContext = userContext;
         }
 
         public async Task Handle(DeleteSavedAdvertisementCommand request, CancellationToken cancellationToken)
         {
-            var saved = await _savedAdvertisementRepository.GetByIdAsync(request.Id);
+            var accountId = _userContext.AccountId;
+            if (accountId is null) return;
 
-            if(saved == null)
-            {
-                throw new KeyNotFoundException("Saved advertisement not found.");
-            }
+            var entries = await _repo.FindAsync(
+                s => s.AdvertisementId == request.Id && s.AccountId == accountId.Value);
 
-            await _savedAdvertisementRepository.DeleteAsync(saved);
+            foreach (var entry in entries)
+                await _repo.DeleteAsync(entry);
         }
     }
 }

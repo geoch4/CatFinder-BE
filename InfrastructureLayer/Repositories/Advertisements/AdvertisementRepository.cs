@@ -18,7 +18,12 @@ namespace InfrastructureLayer.Repositories.Advertisements
         /// Used on a user's profile page to show their own listings.
         /// </summary>
         public async Task<IEnumerable<Advertisement>> GetByAccountIdAsync(int accountId)
-            => await _dbSet.Where(a => a.AccountId == accountId).ToListAsync();
+            => await _dbSet
+                .Include(a => a.Cat)
+                .Include(a => a.Location)
+                .Where(a => a.AccountId == accountId)
+                .OrderByDescending(a => a.CreatedAt)
+                .ToListAsync();
 
         /// <summary>
         /// Filters by Lost or Found. Maps to GET /api/advertisements?type=Lost.
