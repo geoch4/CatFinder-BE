@@ -163,12 +163,14 @@ namespace APILayer
                     """, "text/html"));
             }
 
-            app.UseStaticFiles();
-
             app.UseHttpsRedirection();
 
-            // Must be before UseAuthentication and UseAuthorization
+            // Must be before UseAuthentication and UseAuthorization.
+            // Must also be before UseStaticFiles so static files include CORS headers —
+            // without this, axios blob fetches for images are blocked by the browser.
             app.UseCors("AllowFrontend");
+
+            app.UseStaticFiles();
 
             app.UseAuthentication();
             app.UseAuthorization();

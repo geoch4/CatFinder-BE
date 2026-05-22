@@ -4,6 +4,7 @@ using ApplicationLayer.SavedAdvertisements.Commands;
 using ApplicationLayer.SavedAdvertisements.DTOs;
 using ApplicationLayer.SavedAdvertisements.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APILayer.Controllers
@@ -57,8 +58,8 @@ namespace APILayer.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             await _mediator.Send(
