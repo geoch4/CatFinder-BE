@@ -37,7 +37,7 @@ namespace InfrastructureLayer.Repositories.Advertisements
         /// Combined filter used by GET /api/advertisements?type=Lost&amp;city=Göteborg.
         /// Includes Location so the city predicate can be evaluated in the database.
         /// </summary>
-        public async Task<IEnumerable<Advertisement>> GetFilteredAsync(AdvertisementType? type, string? city)
+        public async Task<IEnumerable<Advertisement>> GetFilteredAsync(AdvertisementType? type, string? city, int skip = 0, int take = 12)
         {
             var query = _dbSet
                 .Include(a => a.Cat)
@@ -51,7 +51,11 @@ namespace InfrastructureLayer.Repositories.Advertisements
             if (!string.IsNullOrEmpty(city))
                 query = query.Where(a => a.Location.City == city);
 
-            return await query.ToListAsync();
+            return await query
+                .OrderByDescending(a => a.CreatedAt)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Advertisement>> GetAllForAdminAsync(AdvertisementType? type, string? city)
