@@ -24,4 +24,9 @@
     <Folder Include="Helpers\" />
     <Folder Include="Middleware\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
