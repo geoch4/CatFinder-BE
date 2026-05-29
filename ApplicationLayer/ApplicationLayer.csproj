@@ -8,7 +8,6 @@
     <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Auth\" />
     <Folder Include="Common\Behaviors\" />
     <Folder Include="Common\Interfaces\" />
     <Folder Include="Common\Mappings\" />
