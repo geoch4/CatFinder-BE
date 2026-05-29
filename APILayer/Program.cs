@@ -92,7 +92,7 @@ namespace APILayer
             // AllowCredentials() is required for the HttpOnly refresh token cookie to work
             var corsOrigins = builder.Configuration
                 .GetSection("CorsOrigins").Get<string[]>()
-                ?? new[] { "http://localhost:5173", "http://localhost:3000" };
+                ?? new[] { "http://localhost:5174", "http://localhost:5174" };
 
             builder.Services.AddCors(options =>
             {
