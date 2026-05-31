@@ -29,7 +29,7 @@ namespace ApplicationLayer.Auth.Commands.ForgotPassword
                 return OperationResult<bool>.Success(true);
             }
 
-            var code = Random.Shared.Next(10000, 99999).ToString();
+            var code = Random.Shared.Next(100000, 999999).ToString();
 
             account.PasswordResetCode = code;
             account.PasswordResetCodeExpiresAt = DateTime.UtcNow.AddMinutes(15);
